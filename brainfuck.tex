@@ -1,0 +1,133 @@
+\catcode`@=12
+
+\bgroup
+\def\:{\global\let\BlankSpace= }\:
+\egroup
+
+% not ignoring whitespace
+\long\def\IfNextChar#1#2#3{%
+\let\INCToken= #1% <- MEMO: this space is crucial
+\def\INCTrue{#2}\def\INCFalse{#3}%
+\futurelet\INCTok\INC%
+}
+
+\def\INC%
+  {\ifx\INCTok\INCToken\let\INCFalse\INCTrue\fi\INCFalse}
+
+
+
+
+% \expandafter\mathchardef\csname BFtest\endcsname=10234
+% \showthe\BFtest
+
+\expandafter\mathchardef\csname BFpointer\endcsname=0
+
+\count255 = 0
+\loop
+\expandafter\chardef\csname BFreg\the\count255\endcsname=0
+\ifnum\count255 < 29999
+\advance\count255 by 1
+\repeat
+
+% \expandafter\showthe\csname BFreg29999\endcsname
+
+
+
+\def\BFIncrementPointer{
+\showthe\BFpointer
+\edef\Act{\noexpand\mathchardef\noexpand\BFpointer=\numexpr\the\BFpointer+1\relax}
+\Act
+\showthe\BFpointer
+}
+
+\def\AdvancePointerBy#1{
+\def\Reg{\mathchardef\BFpointer}
+\edef\Val{\numexpr\the\BFpointer+#1\relax}
+\Reg=\Val
+}
+
+\def\AdvanceRegisterBy#1{
+\def\Reg{\expandafter\chardef\csname BFreg\the\BFpointer\endcsname}
+\edef\Val{\numexpr\the\csname BFreg\the\BFpointer\endcsname+#1\relax}
+\Reg=\Val
+}
+
+\def\IncrementRegister{\AdvanceRegisterBy{+1}}
+\def\DecrementRegister{\AdvanceRegisterBy{-1}}
+
+\def\IncrementPointer{\AdvancePointerBy{+1}}
+\def\DecrementPointer{\AdvancePointerBy{-1}}
+
+
+\def\DumpMem{
+\count255 = 0
+\loop
+\expandafter\the\csname BFreg\the\count255\endcsname,
+\ifnum\count255 < 10
+\advance\count255 by 1
+\repeat
+}
+
+\tt
+
+% \def\Loop#1\Pool
+
+\begingroup
+
+\DumpMem
+
+\catcode`>=\active\let>\IncrementPointer
+\catcode`<=\active\let<\DecrementPointer
+\catcode`+=\active\let+\IncrementRegister
+\catcode`-=\active\let-\DecrementRegister
+>+>>+++->+
+\DumpMem
+
+\endgroup
+
+
+
+\begingroup
+\loop
+% \catcode`=\active
+\ifnum\count255 < 10
+\advance\count255 by 1
+\repeat
+
+
+\endgroup
+
+
+\showthe\catcode`\
+
+\def\gob
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hello world.
+
+\bye
+
+una buona idea sarebbe usare
+[ = {
+] = }
+ed adottare un modello parser-like che rilevi gruppi
+
+
+
+
+
+
+
+

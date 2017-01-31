@@ -1,0 +1,23 @@
+\documentclass[margin=.25in]{standalone}
+
+\newcount\mullvl\mullvl=0
+\newcount\muldpt\muldpt=0
+\newdimen\mulgap\mulgap=.15em
+\newsavebox\mulbox
+
+\let\oldunderline\underline
+
+\def\multiunderline#1{%
+  \oldunderline{%
+    \sbox \mulbox {\global\advance\muldpt1\advance\mullvl1#1}%
+    \dp \mulbox \dimexpr\mulgap*(\muldpt-\mullvl-1)\relax
+    \box \mulbox
+  }%
+  \ifnum\mullvl=0\muldpt=0\fi
+}
+
+\let\underline\multiunderline
+
+\begin{document}
+\underline{Foo\underline{bar\underline{baz}q}ux}!
+\end{document}
